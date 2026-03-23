@@ -4,125 +4,639 @@
     <meta charset="UTF-8">
     <title>Portfolio – Paul BESSO</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --c1: #FF3B5C;
+            --c2: #FFD23F;
+            --c3: #00D9FF;
+            --c4: #7B2FFF;
+            --c5: #00FF94;
+            --bg: #0D0D0D;
+            --card: #161616;
+            --text: #F5F0E8;
+            --mono: 'Space Mono', monospace;
+            --display: 'Syne', sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--mono);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* CUSTOM CURSOR */
+        .cursor {
+            width: 12px; height: 12px;
+            background: var(--c2);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+        .cursor-trail {
+            width: 32px; height: 32px;
+            border: 2px solid var(--c2);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none;
+            z-index: 9998;
+            transition: left 0.12s ease, top 0.12s ease;
+            mix-blend-mode: difference;
+        }
+
+        /* NOISE OVERLAY */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.35;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.2rem 3rem;
+            background: rgba(13,13,13,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .nav-logo {
+            font-family: var(--display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+        .nav-logo span { color: var(--c1); }
+        .nav-links {
+            display: flex; gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(245,240,232,0.5);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--c3); }
+
+        /* HERO */
+        header {
+            min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+            padding: 8rem 3rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute; inset: 0;
+            background:
+                    radial-gradient(ellipse 60% 50% at 80% 40%, rgba(123,47,255,0.25) 0%, transparent 60%),
+                    radial-gradient(ellipse 40% 35% at 20% 70%, rgba(255,59,92,0.2) 0%, transparent 55%),
+                    radial-gradient(ellipse 50% 40% at 60% 80%, rgba(0,217,255,0.15) 0%, transparent 60%);
+        }
+
+        .hero-tag {
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--c3);
+            border: 1px solid var(--c3);
+            padding: 0.3rem 0.8rem;
+            margin-bottom: 1.8rem;
+            display: inline-block;
+            animation: fadeUp 0.6s ease both;
+        }
+
+        header h1 {
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 9vw, 8rem);
+            font-weight: 800;
+            line-height: 0.92;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.5rem;
+            animation: fadeUp 0.7s 0.1s ease both;
+        }
+        header h1 .name-highlight {
+            display: block;
+            -webkit-text-stroke: 2px var(--c2);
+            color: transparent;
+        }
+        header h1 .name-solid {
+            display: block;
+            color: var(--text);
+        }
+
+        .hero-sub {
+            font-size: 0.85rem;
+            color: rgba(245,240,232,0.55);
+            letter-spacing: 0.05em;
+            max-width: 380px;
+            line-height: 1.7;
+            animation: fadeUp 0.7s 0.2s ease both;
+        }
+
+        .hero-scroll {
+            position: absolute; bottom: 2.5rem; left: 3rem;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(245,240,232,0.3);
+            display: flex; align-items: center; gap: 0.8rem;
+        }
+        .hero-scroll::before {
+            content: '';
+            width: 40px; height: 1px;
+            background: rgba(245,240,232,0.3);
+        }
+
+        .hero-badge {
+            position: absolute; right: 3rem; bottom: 3rem;
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            display: flex; align-items: center; justify-content: center;
+            animation: spin 18s linear infinite;
+        }
+        .hero-badge svg text {
+            fill: rgba(245,240,232,0.4);
+            font-size: 10.5px;
+            font-family: var(--mono);
+            letter-spacing: 3px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        /* SECTION STRUCTURE */
+        main { padding: 0 3rem; }
+
+        .section-label {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .section-label .num {
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            color: var(--c1);
+        }
+        .section-label h2 {
+            font-family: var(--display);
+            font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text);
+        }
+        .section-label .line {
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        /* GALLERY SECTIONS */
+        .gallery {
+            margin-bottom: 6rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .gallery.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* ACCENT COLORS PER SECTION */
+        .gallery:nth-child(1) .section-label .num { color: var(--c1); }
+        .gallery:nth-child(2) .section-label .num { color: var(--c2); }
+        .gallery:nth-child(3) .section-label .num { color: var(--c3); }
+        .gallery:nth-child(4) .section-label .num { color: var(--c4); }
+        .gallery:nth-child(5) .section-label .num { color: var(--c5); }
+        .gallery:nth-child(6) .section-label .num { color: var(--c1); }
+        .gallery:nth-child(7) .section-label .num { color: var(--c2); }
+        .gallery:nth-child(8) .section-label .num { color: var(--c3); }
+        .gallery:nth-child(9) .section-label .num { color: var(--c4); }
+        .gallery:nth-child(10) .section-label .num { color: var(--c5); }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+
+        .grid-single { grid-template-columns: 1fr; max-width: 700px; }
+
+        .img-wrap {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            background: var(--card);
+            aspect-ratio: 4/3;
+        }
+
+        /* Featured single images get more height */
+        .grid-single .img-wrap { aspect-ratio: 16/9; }
+
+        .img-wrap::after {
+            content: '';
+            position: absolute; inset: 0;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .img-wrap img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s ease;
+            filter: saturate(0.85);
+        }
+
+        .img-wrap:hover img {
+            transform: scale(1.05);
+            filter: saturate(1.15);
+        }
+
+        /* COLOR ACCENT TAGs on hover */
+        .img-wrap .hover-label {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 1rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 3;
+        }
+        .img-wrap:hover .hover-label { transform: none; }
+
+        /* COLOR STRIPE per gallery */
+        .gallery:nth-child(1) .img-wrap:hover::after { border-color: var(--c1); }
+        .gallery:nth-child(2) .img-wrap:hover::after { border-color: var(--c2); }
+        .gallery:nth-child(3) .img-wrap:hover::after { border-color: var(--c3); }
+        .gallery:nth-child(4) .img-wrap:hover::after { border-color: var(--c4); }
+        .gallery:nth-child(5) .img-wrap:hover::after { border-color: var(--c5); }
+        .gallery:nth-child(6) .img-wrap:hover::after { border-color: var(--c1); }
+        .gallery:nth-child(7) .img-wrap:hover::after { border-color: var(--c2); }
+        .gallery:nth-child(8) .img-wrap:hover::after { border-color: var(--c3); }
+        .gallery:nth-child(9) .img-wrap:hover::after { border-color: var(--c4); }
+        .gallery:nth-child(10) .img-wrap:hover::after { border-color: var(--c5); }
+
+        /* ACCENT DOT for the section number */
+        .accent-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        /* VIDEO SECTION */
+        .video-section {
+            margin-bottom: 6rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .video-section.visible { opacity: 1; transform: none; }
+
+        .video-grid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+        }
+
+        .video-wrap {
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .video-wrap video {
+            width: 100%;
+            display: block;
+        }
+        .video-wrap::before {
+            content: '▶';
+            position: absolute; top: 1rem; right: 1rem;
+            font-size: 0.7rem;
+            background: var(--c1);
+            color: #fff;
+            padding: 0.3rem 0.5rem;
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* DIVIDER */
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            margin: 0 0 6rem;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            font-size: 0.7rem;
+            color: rgba(245,240,232,0.3);
+            letter-spacing: 0.1em;
+        }
+        .footer-colors {
+            display: flex; gap: 6px;
+        }
+        .footer-colors span {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--c4); border-radius: 2px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            header { padding: 6rem 1.5rem 3rem; }
+            main { padding: 0 1.5rem; }
+            footer { padding: 2rem 1.5rem; }
+            .video-grid { grid-template-columns: 1fr; }
+            .hero-badge { display: none; }
+        }
+    </style>
 </head>
 <body>
 
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-logo">Paul <span>BESSO</span></div>
+    <ul class="nav-links">
+        <li><a href="#chambre">Chambre</a></li>
+        <li><a href="#bakery">Bakery</a></li>
+        <li><a href="#backpack">Backpack</a></li>
+        <li><a href="#controllers">Controllers</a></li>
+        <li><a href="#video">Vidéo</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
 <header>
-    <h1>Portfolio – Paul BESSO</h1>
-    <p>Projets 3D & Rendus</p>
+    <div class="hero-bg"></div>
+    <div class="hero-tag">✦ Portfolio 3D &amp; Rendus</div>
+    <h1>
+        <span class="name-solid">Paul</span>
+        <span class="name-highlight">BESSO</span>
+    </h1>
+    <p class="hero-sub">Designer 3D passionné par la modélisation,<br>le rendu et la création visuelle.</p>
+    <div class="hero-scroll">Scroll pour explorer</div>
+    <div class="hero-badge">
+        <svg viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+            <defs><path id="circle" d="M 55,55 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"/></defs>
+            <text><textPath href="#circle">3D ARTIST • RENDUS • DESIGN • PORTFOLIO •</textPath></text>
+        </svg>
+    </div>
 </header>
 
-<!-- ===================== CHAMBRE ===================== -->
-<section class="gallery">
-    <h2>Chambre</h2>
-    <div class="grid">
-        <img src="chambre/BESSO_Paul_1B3D_Exercice2_Chambre.png" alt="Chambre 3D">
-    </div>
-</section>
+<main>
 
-<!-- ===================== BAKERY ===================== -->
-<section class="gallery">
-    <h2>Bakery</h2>
-    <div class="grid">
-        <img src="bakery/bakery_image1.jpg" alt="Bakery 1">
-        <img src="bakery/bakery_image2.jpg" alt="Bakery 2">
-        <img src="bakery/bakery_image3.jpg" alt="Bakery 3">
-    </div>
-</section>
+    <!-- CHAMBRE -->
+    <section class="gallery" id="chambre">
+        <div class="section-label">
+            <span class="num">01</span>
+            <h2>Chambre</h2>
+            <span class="line"></span>
+        </div>
+        <div class="grid grid-single">
+            <div class="img-wrap">
+                <img src="chambre/BESSO_Paul_1B3D_Exercice2_Chambre.png" alt="Chambre 3D">
+                <div class="hover-label">Rendu 3D</div>
+            </div>
+        </div>
+    </section>
 
-<!-- ===================== BACKPACK ===================== -->
-<section class="gallery">
-    <h2>Backpack</h2>
-    <div class="grid">
-        <img src="backpack/1000014662.png" alt="Backpack 1">
-        <img src="backpack/1000014663.png" alt="Backpack 2">
-        <img src="backpack/1000014664.png" alt="Backpack 3">
-        <img src="backpack/1000014665.png" alt="Backpack 4">
-    </div>
-</section>
+    <!-- BAKERY -->
+    <section class="gallery" id="bakery">
+        <div class="section-label">
+            <span class="num">02</span>
+            <h2>Bakery</h2>
+            <span class="line"></span>
+        </div>
+        <div class="grid">
+            <div class="img-wrap"><img src="bakery/bakery_image1.jpg" alt="Bakery 1"><div class="hover-label">Vue 01</div></div>
+            <div class="img-wrap"><img src="bakery/bakery_image2.jpg" alt="Bakery 2"><div class="hover-label">Vue 02</div></div>
+            <div class="img-wrap"><img src="bakery/bakery_image3.jpg" alt="Bakery 3"><div class="hover-label">Vue 03</div></div>
+        </div>
+    </section>
 
-<!-- ===================== CAR ===================== -->
-<section class="gallery">
-    <h2>Car</h2>
-    <div class="grid">
-        <img src="car/car.png" alt="Car">
-    </div>
-</section>
+    <!-- BACKPACK -->
+    <section class="gallery" id="backpack">
+        <div class="section-label">
+            <span class="num">03</span>
+            <h2>Backpack</h2>
+            <span class="line"></span>
+        </div>
+        <div class="grid">
+            <div class="img-wrap"><img src="backpack/1000014662.png" alt="Backpack 1"><div class="hover-label">Vue 01</div></div>
+            <div class="img-wrap"><img src="backpack/1000014663.png" alt="Backpack 2"><div class="hover-label">Vue 02</div></div>
+            <div class="img-wrap"><img src="backpack/1000014664.png" alt="Backpack 3"><div class="hover-label">Vue 03</div></div>
+            <div class="img-wrap"><img src="backpack/1000014665.png" alt="Backpack 4"><div class="hover-label">Vue 04</div></div>
+        </div>
+    </section>
 
-<!-- ===================== BATMAN ===================== -->
-<section class="gallery">
-    <h2>Batman</h2>
-    <div class="grid">
-        <img src="batman/batman.jpg" alt="Batman">
-    </div>
-</section>
+    <!-- CAR -->
+    <section class="gallery" id="car">
+        <div class="section-label">
+            <span class="num">04</span>
+            <h2>Car</h2>
+            <span class="line"></span>
+        </div>
+        <div class="grid grid-single">
+            <div class="img-wrap">
+                <img src="car/car.png" alt="Car">
+                <div class="hover-label">Rendu Final</div>
+            </div>
+        </div>
+    </section>
 
-<!-- ===================== PS REMOTE ===================== -->
-<section class="gallery">
-    <h2>PS Remote</h2>
-    <div class="grid">
-        <img src="ps_remote/BESSO_PAUL_Exercice2_GameController_Render01.jpg" alt="">
-        <img src="ps_remote/BESSO_PAUL_Exercice2_GameController_Render02.jpg" alt="">
-        <img src="ps_remote/BESSO_PAUL_Exercice2_GameController_Render03.jpg" alt="">
-        <img src="ps_remote/BESSO_PAUL_Exercice2_GameController_Render04.jpg" alt="">
-    </div>
-</section>
+    <!-- BATMAN -->
+    <section class="gallery" id="batman">
+        <div class="section-label">
+            <span class="num">05</span>
+            <h2>Batman</h2>
+            <span class="line"></span>
+        </div>
+        <div class="grid grid-single">
+            <div class="img-wrap">
+                <img src="batman/batman.jpg" alt="Batman">
+                <div class="hover-label">Rendu Final</div>
+            </div>
+        </div>
+    </section>
 
-<!-- ===================== PS4 REMOTE ===================== -->
-<section class="gallery">
-    <h2>PS4 Remote</h2>
-    <div class="grid">
-        <img src="ps4_remote/controller01.jpg" alt="">
-        <img src="ps4_remote/controller02.jpg" alt="">
-    </div>
-</section>
+    <!-- PS REMOTE -->
+    <section class="gallery" id="controllers">
+        <div class="section-label">
+            <span class="num">06</span>
+            <h2>PS Remote</h2>
+            <span class="line"></span>
+        </div>
+        <div class="grid">
+            <div class="img-wrap"><img src="ps_remote/BESSO_PAUL_Exercice2_GameController_Render01.jpg" alt="Render 01"><div class="hover-label">Render 01</div></div>
+            <div class="img-wrap"><img src="ps_remote/BESSO_PAUL_Exercice2_GameController_Render02.jpg" alt="Render 02"><div class="hover-label">Render 02</div></div>
+            <div class="img-wrap"><img src="ps_remote/BESSO_PAUL_Exercice2_GameController_Render03.jpg" alt="Render 03"><div class="hover-label">Render 03</div></div>
+            <div class="img-wrap"><img src="ps_remote/BESSO_PAUL_Exercice2_GameController_Render04.jpg" alt="Render 04"><div class="hover-label">Render 04</div></div>
+        </div>
+    </section>
 
-<!-- ===================== WII REMOTE ===================== -->
-<section class="gallery">
-    <h2>Wii Remote</h2>
-    <div class="grid">
-        <img src="wi_remote/wii_remote_image1.jpg" alt="">
-        <img src="wi_remote/wii_remote_image2.jpg" alt="">
-    </div>
-</section>
+    <!-- PS4 REMOTE -->
+    <section class="gallery">
+        <div class="section-label">
+            <span class="num">07</span>
+            <h2>PS4 Remote</h2>
+            <span class="line"></span>
+        </div>
+        <div class="grid">
+            <div class="img-wrap"><img src="ps4_remote/controller01.jpg" alt="Controller 01"><div class="hover-label">Vue 01</div></div>
+            <div class="img-wrap"><img src="ps4_remote/controller02.jpg" alt="Controller 02"><div class="hover-label">Vue 02</div></div>
+        </div>
+    </section>
 
-<!-- ===================== SPIDERBOT ===================== -->
-<section class="gallery">
-    <h2>Spiderbot</h2>
-    <div class="grid">
-        <img src="spiderbot/image_spiderbot1.jpg" alt="">
-        <img src="spiderbot/image_spiderbot2.jpg" alt="">
-        <img src="spiderbot/image_spiderbot3.jpg" alt="">
-    </div>
-</section>
+    <!-- WII REMOTE -->
+    <section class="gallery">
+        <div class="section-label">
+            <span class="num">08</span>
+            <h2>Wii Remote</h2>
+            <span class="line"></span>
+        </div>
+        <div class="grid">
+            <div class="img-wrap"><img src="wi_remote/wii_remote_image1.jpg" alt="Wii 01"><div class="hover-label">Vue 01</div></div>
+            <div class="img-wrap"><img src="wi_remote/wii_remote_image2.jpg" alt="Wii 02"><div class="hover-label">Vue 02</div></div>
+        </div>
+    </section>
 
-<!-- ===================== ILLUSTRATIONS ===================== -->
-<section class="gallery">
-    <h2>Illustrations</h2>
-    <div class="grid">
-        <img src="voiture.PNG" alt="Voiture">
-        <img src="monstre.jpg" alt="Monstre">
-    </div>
-</section>
+    <!-- SPIDERBOT -->
+    <section class="gallery">
+        <div class="section-label">
+            <span class="num">09</span>
+            <h2>Spiderbot</h2>
+            <span class="line"></span>
+        </div>
+        <div class="grid">
+            <div class="img-wrap"><img src="spiderbot/image_spiderbot1.jpg" alt="Spiderbot 1"><div class="hover-label">Vue 01</div></div>
+            <div class="img-wrap"><img src="spiderbot/image_spiderbot2.jpg" alt="Spiderbot 2"><div class="hover-label">Vue 02</div></div>
+            <div class="img-wrap"><img src="spiderbot/image_spiderbot3.jpg" alt="Spiderbot 3"><div class="hover-label">Vue 03</div></div>
+        </div>
+    </section>
 
-<!-- ===================== VIDEO ===================== -->
-<section class="video-section">
-    <h2>Vidéo</h2>
-    <video controls>
-        <source src="CW2025_1_1B3D_3B3D_Cauchemart.mp4" type="video/mp4">
-        Ton navigateur ne supporte pas la vidéo.
-    </video>
-    <video controls>
-        <source src="room.mp4" type="video/mp4">
-        Ton navigateur ne supporte pas la vidéo.
-    </video>
-</section>
+    <!-- ILLUSTRATIONS -->
+    <section class="gallery">
+        <div class="section-label">
+            <span class="num">10</span>
+            <h2>Illustrations</h2>
+            <span class="line"></span>
+        </div>
+        <div class="grid">
+            <div class="img-wrap"><img src="voiture.PNG" alt="Voiture"><div class="hover-label">Voiture</div></div>
+            <div class="img-wrap"><img src="monstre.jpg" alt="Monstre"><div class="hover-label">Monstre</div></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- VIDEO -->
+    <section class="video-section" id="video">
+        <div class="section-label">
+            <span class="num" style="color: var(--c1)">▶</span>
+            <h2>Vidéo</h2>
+            <span class="line"></span>
+        </div>
+        <div class="video-grid">
+            <div class="video-wrap">
+                <video controls>
+                    <source src="CW2025_1_1B3D_3B3D_Cauchemart.mp4" type="video/mp4">
+                    Ton navigateur ne supporte pas la vidéo.
+                </video>
+            </div>
+            <div class="video-wrap">
+                <video controls>
+                    <source src="room.mp4" type="video/mp4">
+                    Ton navigateur ne supporte pas la vidéo.
+                </video>
+            </div>
+        </div>
+    </section>
+
+</main>
 
 <footer>
-    <p>© 2025 – Paul BESSO</p>
+    <span>© 2025 — Paul BESSO</span>
+    <div class="footer-colors">
+        <span style="background: var(--c1)"></span>
+        <span style="background: var(--c2)"></span>
+        <span style="background: var(--c3)"></span>
+        <span style="background: var(--c4)"></span>
+        <span style="background: var(--c5)"></span>
+    </div>
 </footer>
 
-<script src="index.js"></script>
+<script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const trail = document.getElementById('cursorTrail');
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX - 6 + 'px';
+        cursor.style.top = e.clientY - 6 + 'px';
+        trail.style.left = e.clientX - 16 + 'px';
+        trail.style.top = e.clientY - 16 + 'px';
+    });
+    document.querySelectorAll('a, img, video, .img-wrap').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2.5)');
+        el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.gallery, .video-section').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
