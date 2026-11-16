@@ -1,10 +1,9 @@
 {
   "name": "portfolioPaulBesso",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Portfolio de Paul Besso \u2014 artiste 3D",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx --yes serve -l 3000 ."
   },
   "private": true
 }

@@ -1,616 +1,207 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Portfolio – Paul BESSO</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --c1: #FF3B5C;
-            --c2: #FFBE0B;
-            --c3: #0066FF;
-            --c4: #8338EC;
-            --c5: #06D6A0;
-            --bg: #FFFFFF;
-            --text: #0F0E17;
-            --muted: rgba(15,14,23,0.45);
-            --mono: 'Space Mono', monospace;
-            --sans: 'Syne', sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paul Besso — Artiste 3D</title>
+  <meta name="description" content="Portfolio de Paul Besso, artiste 3D : modeling, texturing, rigging, animation et rendu.">
+  <meta name="theme-color" content="#0b0b0c">
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--mono);
-            overflow-x: hidden;
-            cursor: none;
-        }
+  <link rel="preload" as="image" href="assets/projects/starry/scene-01-sm.webp">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/sections.css">
 
-        /* ── CURSOR ── */
-        .cursor {
-            width: 10px; height: 10px;
-            background: var(--text);
-            border-radius: 50%;
-            position: fixed; top: 0; left: 0;
-            pointer-events: none; z-index: 9999;
-            transition: transform 0.12s ease;
-            mix-blend-mode: difference;
-        }
-        .cursor-trail {
-            width: 36px; height: 36px;
-            border: 2px solid var(--text);
-            border-radius: 50%;
-            position: fixed; top: 0; left: 0;
-            pointer-events: none; z-index: 9998;
-            transition: left 0.14s ease, top 0.14s ease;
-            mix-blend-mode: difference;
-        }
-
-        /* ── NAV ── */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 1.2rem 3rem;
-            background: rgba(255,255,255,0.88);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(0,0,0,0.07);
-        }
-        .nav-logo {
-            font-family: var(--sans); font-size: 1.1rem; font-weight: 900;
-            letter-spacing: -0.03em; color: var(--text);
-        }
-        .nav-logo span {
-            background: linear-gradient(120deg, var(--c1), var(--c4));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a {
-            font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-            color: var(--muted); text-decoration: none; position: relative;
-            transition: color 0.2s;
-        }
-        .nav-links a::after {
-            content: ''; position: absolute; bottom: -3px; left: 0;
-            width: 0; height: 2px; background: var(--c3); border-radius: 1px;
-            transition: width 0.25s ease;
-        }
-        .nav-links a:hover { color: var(--c3); }
-        .nav-links a:hover::after { width: 100%; }
-
-        /* ── HERO ── */
-        header {
-            min-height: 100vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-            padding: 8rem 3rem 4rem; position: relative; overflow: hidden;
-        }
-
-        .blob {
-            position: absolute; border-radius: 50%;
-            filter: blur(90px); opacity: 0.18; pointer-events: none;
-        }
-        .blob-1 { width: 520px; height: 520px; background: var(--c4); top: -15%; right: -5%; animation: blobFloat 11s ease-in-out infinite; }
-        .blob-2 { width: 360px; height: 360px; background: var(--c1); bottom: -8%; left: 4%; animation: blobFloat 13s ease-in-out infinite reverse; }
-        .blob-3 { width: 280px; height: 280px; background: var(--c2); top: 22%; left: 32%; animation: blobFloat 9s ease-in-out infinite; animation-delay: -4s; }
-        .blob-4 { width: 220px; height: 220px; background: var(--c5); top: 58%; right: 14%; animation: blobFloat 10s ease-in-out infinite; animation-delay: -2s; }
-
-        @keyframes blobFloat {
-            0%,100% { transform: translate(0,0) scale(1); }
-            33%      { transform: translate(45px,-30px) scale(1.08); }
-            66%      { transform: translate(-28px,38px) scale(0.93); }
-        }
-
-        .shape { position: absolute; pointer-events: none; opacity: 0.55; }
-        .shape-circle { border-radius: 50%; animation: floatY 6s ease-in-out infinite; }
-        .shape-square { animation: floatR 8s ease-in-out infinite; }
-        .sh1 { width:16px;height:16px; background:var(--c1); top:26%;right:13%; animation-duration:7s; }
-        .sh2 { width:22px;height:22px; background:var(--c2); top:52%;right:22%; animation-duration:9s; animation-delay:-3s; }
-        .sh3 { width:12px;height:12px; background:var(--c5); top:72%;left:22%; animation-duration:6s; animation-delay:-2s; }
-        .sh4 { width:18px;height:18px; background:var(--c3); top:14%;left:18%; animation-duration:8s; animation-delay:-1s; }
-        .sh5 { width:10px;height:10px; background:var(--c4); top:40%;left:8%;  animation-duration:5s; animation-delay:-4s; }
-
-        @keyframes floatY {
-            0%,100% { transform: translateY(0); }
-            50%      { transform: translateY(-22px); }
-        }
-        @keyframes floatR {
-            0%,100% { transform: translateY(0) rotate(45deg); }
-            50%      { transform: translateY(-18px) rotate(225deg); }
-        }
-
-        .hero-tag {
-            font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
-            color: var(--c4); border: 2px solid var(--c4);
-            padding: 0.35rem 0.9rem; margin-bottom: 2rem; border-radius: 100px;
-            display: inline-block; background: rgba(131,56,236,0.06);
-            animation: fadeUp 0.6s ease both;
-        }
-
-        header h1 {
-            font-family: var(--sans); font-size: clamp(3.5rem,10vw,9rem);
-            font-weight: 900; line-height: 0.9; letter-spacing: -0.04em;
-            margin-bottom: 1.8rem; animation: fadeUp 0.7s 0.1s ease both;
-        }
-        .name-solid { display: block; color: var(--text); }
-        .name-highlight {
-            display: block;
-            background: linear-gradient(90deg, var(--c1), var(--c4), var(--c3), var(--c1));
-            background-size: 300% 100%;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientMove 4s linear infinite, fadeUp 0.7s 0.1s ease both;
-        }
-        @keyframes gradientMove {
-            0%   { background-position: 0% 50%; }
-            100% { background-position: 300% 50%; }
-        }
-
-        .hero-sub {
-            font-size: 0.88rem; color: var(--muted); letter-spacing: 0.05em;
-            max-width: 400px; line-height: 1.8;
-            animation: fadeUp 0.7s 0.2s ease both;
-        }
-
-        .hero-cta {
-            display: flex; gap: 1rem; margin-top: 2.5rem;
-            animation: fadeUp 0.7s 0.3s ease both;
-        }
-        .btn {
-            font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em;
-            text-transform: uppercase; padding: 0.85rem 1.8rem; border-radius: 100px;
-            text-decoration: none; cursor: none;
-            transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease;
-        }
-        .btn-primary { background: var(--text); color: #fff; }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.18); }
-        .btn-outline { border: 2px solid var(--text); color: var(--text); }
-        .btn-outline:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.09); }
-
-        .hero-scroll {
-            position: absolute; bottom: 2.5rem; left: 3rem;
-            font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
-            color: var(--muted); display: flex; align-items: center; gap: 0.8rem;
-        }
-        .hero-scroll::before { content:''; width:40px; height:1px; background: rgba(0,0,0,0.2); }
-
-        .hero-badge {
-            position: absolute; right: 3rem; bottom: 3rem;
-            width: 110px; height: 110px; border-radius: 50%;
-            border: 1.5px solid rgba(0,0,0,0.15);
-            display: flex; align-items: center; justify-content: center;
-            animation: spin 18s linear infinite;
-        }
-        .hero-badge svg text { fill: var(--muted); font-size: 10.5px; font-family: var(--mono); letter-spacing: 3px; }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeUp {
-            from { opacity:0; transform: translateY(30px); }
-            to   { opacity:1; transform: none; }
-        }
-
-        /* ── MARQUEE ── */
-        .marquee-strip {
-            overflow: hidden; white-space: nowrap;
-            border-top: 2px solid var(--text); border-bottom: 2px solid var(--text);
-            padding: 0.8rem 0; background: var(--c4);
-            margin-bottom: 5rem;
-        }
-        .marquee-inner { display: inline-block; animation: marquee 22s linear infinite; }
-        .marquee-inner span {
-            font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #fff;
-            margin: 0 1.4rem;
-        }
-        .marquee-inner .dot { color: rgba(255,255,255,0.35); }
-        @keyframes marquee {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-50%); }
-        }
-
-        /* ── MAIN ── */
-        main { padding: 0 3rem 4rem; }
-
-        /* ── SECTION HEADER ── */
-        .section-label { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 2.5rem; }
-        .section-num {
-            font-family: var(--sans); font-size: 0.68rem; font-weight: 900;
-            letter-spacing: 0.04em; color: #fff; padding: 0.32rem 0.72rem;
-            border-radius: 7px; flex-shrink: 0; white-space: nowrap;
-        }
-        .section-label h2 {
-            font-family: var(--sans); font-size: clamp(1.8rem,3.5vw,3rem);
-            font-weight: 900; letter-spacing: -0.04em; color: var(--text);
-            position: relative;
-        }
-        .section-label h2::after {
-            content: ''; position: absolute; bottom: -4px; left: 0;
-            height: 4px; width: 0; border-radius: 2px;
-            transition: width 0.9s cubic-bezier(0.4,0,0.2,1) 0.25s;
-        }
-        .gallery.visible .section-label h2::after,
-        .video-section.visible .section-label h2::after { width: 100%; }
-
-        .section-role {
-            font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
-            color: var(--muted); border: 1px solid rgba(0,0,0,0.15);
-            padding: 0.22rem 0.65rem; border-radius: 100px; white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        /* Couleurs par section */
-        .gallery:nth-child(1)  .section-num  { background: var(--c1); }
-        .gallery:nth-child(2)  .section-num  { background: var(--c2); color: var(--text); }
-        .gallery:nth-child(3)  .section-num  { background: var(--c3); }
-        .gallery:nth-child(4)  .section-num  { background: var(--c4); }
-        .gallery:nth-child(5)  .section-num  { background: var(--c5); color: var(--text); }
-        .gallery:nth-child(6)  .section-num  { background: var(--c1); }
-        .gallery:nth-child(7)  .section-num  { background: var(--c2); color: var(--text); }
-
-        .gallery:nth-child(1)  .section-label h2::after { background: var(--c1); }
-        .gallery:nth-child(2)  .section-label h2::after { background: var(--c2); }
-        .gallery:nth-child(3)  .section-label h2::after { background: var(--c3); }
-        .gallery:nth-child(4)  .section-label h2::after { background: var(--c4); }
-        .gallery:nth-child(5)  .section-label h2::after { background: var(--c5); }
-        .gallery:nth-child(6)  .section-label h2::after { background: var(--c1); }
-        .gallery:nth-child(7)  .section-label h2::after { background: var(--c2); }
-        .video-section .section-label h2::after { background: var(--c1); }
-
-        /* ── GALLERY ── */
-        .gallery {
-            margin-bottom: 6rem;
-            opacity: 0; transform: translateY(40px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
-        }
-        .gallery.visible { opacity: 1; transform: none; }
-
-        .gallery .img-wrap {
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
-        }
-        .gallery.visible .img-wrap { opacity: 1; }
-        .gallery.visible .img-wrap:nth-child(1) { transition-delay: 0.15s, 0s, 0s; }
-        .gallery.visible .img-wrap:nth-child(2) { transition-delay: 0.25s, 0s, 0s; }
-        .gallery.visible .img-wrap:nth-child(3) { transition-delay: 0.35s, 0s, 0s; }
-        .gallery.visible .img-wrap:nth-child(4) { transition-delay: 0.45s, 0s, 0s; }
-
-        /* ── GRID ── */
-        .grid {
-            display: grid; gap: 16px;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        }
-        .grid-single { grid-template-columns: 1fr; max-width: 780px; }
-
-        /* ── IMAGE CARD ── */
-        .img-wrap {
-            position: relative; overflow: hidden; border-radius: 14px;
-            background: #F2F2F7; aspect-ratio: 4/3;
-            box-shadow: 0 2px 14px rgba(0,0,0,0.07);
-        }
-        .grid-single .img-wrap { aspect-ratio: 16/9; }
-
-        .img-wrap:hover { transform: translateY(-7px) scale(1.01); }
-
-        .gallery:nth-child(1)  .img-wrap:hover { box-shadow: 0 18px 44px rgba(255,59,92,0.28); }
-        .gallery:nth-child(2)  .img-wrap:hover { box-shadow: 0 18px 44px rgba(255,190,11,0.30); }
-        .gallery:nth-child(3)  .img-wrap:hover { box-shadow: 0 18px 44px rgba(0,102,255,0.26); }
-        .gallery:nth-child(4)  .img-wrap:hover { box-shadow: 0 18px 44px rgba(131,56,236,0.26); }
-        .gallery:nth-child(5)  .img-wrap:hover { box-shadow: 0 18px 44px rgba(6,214,160,0.28); }
-        .gallery:nth-child(6)  .img-wrap:hover { box-shadow: 0 18px 44px rgba(255,59,92,0.28); }
-        .gallery:nth-child(7)  .img-wrap:hover { box-shadow: 0 18px 44px rgba(255,190,11,0.30); }
-
-        .img-wrap img {
-            width:100%; height:100%; object-fit:cover; display:block;
-            transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
-        }
-        .img-wrap:hover img { transform: scale(1.07); }
-
-        .img-wrap::before {
-            content:''; position:absolute; top:0; left:0; right:0; height:4px;
-            z-index:4; transform: scaleX(0); transform-origin: left;
-            transition: transform 0.3s ease; border-radius: 14px 14px 0 0;
-        }
-        .img-wrap:hover::before { transform: scaleX(1); }
-        .gallery:nth-child(1)  .img-wrap::before { background: var(--c1); }
-        .gallery:nth-child(2)  .img-wrap::before { background: var(--c2); }
-        .gallery:nth-child(3)  .img-wrap::before { background: var(--c3); }
-        .gallery:nth-child(4)  .img-wrap::before { background: var(--c4); }
-        .gallery:nth-child(5)  .img-wrap::before { background: var(--c5); }
-        .gallery:nth-child(6)  .img-wrap::before { background: var(--c1); }
-        .gallery:nth-child(7)  .img-wrap::before { background: var(--c2); }
-
-        .hover-label {
-            position: absolute; bottom:0; left:0; right:0; padding: 1.2rem;
-            background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
-            font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
-            color: rgba(255,255,255,0.92); transform: translateY(100%);
-            transition: transform 0.3s ease; z-index: 3;
-            border-radius: 0 0 14px 14px;
-        }
-        .img-wrap:hover .hover-label { transform: none; }
-
-        /* ── VIDEO SECTION ── */
-        .video-section {
-            margin-bottom: 6rem;
-            opacity: 0; transform: translateY(40px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
-        }
-        .video-section.visible { opacity:1; transform:none; }
-        .video-section .section-num { background: var(--c1); }
-
-        .video-grid {
-            display: grid; gap: 16px;
-            grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
-        }
-        .video-wrap {
-            position: relative; border-radius: 14px; overflow: hidden;
-            background: #F2F2F7;
-            box-shadow: 0 2px 14px rgba(0,0,0,0.07);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .video-wrap:hover { transform: translateY(-5px); box-shadow: 0 18px 44px rgba(255,59,92,0.22); }
-        .video-wrap video { width:100%; display:block; }
-        .video-wrap::after {
-            content: '▶ VIDÉO'; position:absolute; top:1rem; right:1rem;
-            font-size: 0.58rem; letter-spacing: 0.12em;
-            background: var(--c1); color:#fff; padding: 0.3rem 0.6rem;
-            border-radius: 5px; pointer-events:none; z-index:2;
-        }
-
-        /* ── DIVIDER ── */
-        .divider {
-            height: 2px;
-            background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5));
-            margin: 0 0 6rem; border-radius: 2px; opacity: 0.5;
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            padding: 2.5rem 3rem;
-            border-top: 1px solid rgba(0,0,0,0.08);
-            font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em;
-        }
-
-        /* ── SCROLLBAR ── */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #F5F5F5; }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, var(--c4), var(--c1));
-            border-radius: 2px;
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 768px) {
-            nav { padding: 1rem 1.5rem; }
-            .nav-links { display: none; }
-            header { padding: 6rem 1.5rem 3rem; }
-            main { padding: 0 1.5rem 3rem; }
-            footer { padding: 2rem 1.5rem; }
-            .video-grid { grid-template-columns: 1fr; }
-            .hero-badge { display: none; }
-            .blob { opacity: 0.1; }
-        }
-    </style>
+  <script type="module" src="js/main.js"></script>
 </head>
-<body>
+<body class="is-loading">
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-trail" id="cursorTrail"></div>
+  <a class="skip-link" href="#projets">Aller aux projets</a>
 
-<!-- NAV -->
-<nav>
-    <div class="nav-logo">Paul <span>BESSO</span></div>
-    <ul class="nav-links">
-        <li><a href="#chambre">Chambre</a></li>
-        <li><a href="#bakery">Bakery</a></li>
-        <li><a href="#backpack">Backpack</a></li>
-        <li><a href="#video">Vidéo</a></li>
-    </ul>
-</nav>
+  <!-- ░░ LOADER ░░ -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <p class="loader__label">Rendering <span class="loader__file">paul_besso.ma</span></p>
+      <p class="loader__count"><span data-loader-count>000</span><small>%</small></p>
+      <div class="loader__bar"><span data-loader-bar></span></div>
+      <p class="loader__meta mono">samples <span data-loader-samples>0</span> / 512</p>
+    </div>
+  </div>
 
-<!-- HERO -->
-<header>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-    <div class="blob blob-4"></div>
+  <!-- ░░ CURSEUR ░░ -->
+  <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
 
-    <div class="shape shape-circle sh1"></div>
-    <div class="shape shape-square sh2"></div>
-    <div class="shape shape-circle sh3"></div>
-    <div class="shape shape-square sh4"></div>
-    <div class="shape shape-circle sh5"></div>
+  <!-- ░░ NAVIGATION ░░ -->
+  <header class="nav">
+    <a class="nav__logo" href="#top" aria-label="Retour en haut">PB<sup>3D</sup></a>
+    <nav class="nav__links" aria-label="Navigation principale">
+      <a href="#projets">Projets</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#apropos">À propos</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <p class="nav__status mono" aria-hidden="true"><i class="dot"></i> Dispo stages &amp; collabs</p>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="menu">Menu</button>
+  </header>
 
-    <div class="hero-tag">✦ Portfolio 3D &amp; Rendus</div>
-    <h1>
-        <span class="name-solid">Paul</span>
-        <span class="name-highlight">BESSO</span>
-    </h1>
-    <p class="hero-sub">Artist 3D</p>
-    <div class="hero-cta">
-        <a href="#chambre" class="btn btn-primary">Voir les projets</a>
-        <a href="#video" class="btn btn-outline">Vidéos</a>
+  <div class="menu" id="menu" hidden>
+    <a href="#projets">Projets</a>
+    <a href="#pipeline">Pipeline</a>
+    <a href="#apropos">À propos</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <main>
+    <!-- ░░ HERO ░░ -->
+    <section class="hero" id="top" data-key="Intro">
+      <div class="hero__floor" aria-hidden="true"><div class="hero__grid"></div></div>
+      <div class="hero__glow" aria-hidden="true"></div>
+
+      <div class="vp" aria-hidden="true">
+        <span class="vp__corner vp__corner--tl"></span><span class="vp__corner vp__corner--tr"></span>
+        <span class="vp__corner vp__corner--bl"></span><span class="vp__corner vp__corner--br"></span>
+        <p class="vp__label vp__label--tl mono">persp <b>·</b> paul_besso_portfolio.ma</p>
+        <p class="vp__label vp__label--tr mono">24 fps <b>·</b> 1920×1080</p>
+        <p class="vp__label vp__label--br mono" data-coords>x 0.000 &nbsp;y 0.000 &nbsp;z 0.000</p>
+      </div>
+
+      <div class="hero__content">
+        <p class="hero__kicker mono" data-hero-in>Portfolio 2026 — Artiste 3D</p>
+        <h1 class="hero__title" aria-label="Paul Besso">
+          <span class="line" data-split>Paul</span>
+          <span class="line line--accent" data-split>Besso</span>
+        </h1>
+        <p class="hero__lead" data-hero-in>
+          Je modélise, texture, rigge et anime des univers&nbsp;: du premier blocking
+          jusqu'au dernier sample du rendu final.
+        </p>
+        <div class="hero__cta" data-hero-in>
+          <a class="btn btn--solid" href="#projets" data-cursor="Go">Voir les projets</a>
+          <a class="btn btn--ghost" href="#pipeline" data-cursor="Go">Le pipeline</a>
+        </div>
+      </div>
+
+      <figure class="reel" data-reel data-hero-in aria-label="Aperçu des projets">
+        <div class="reel__stage"></div>
+        <figcaption class="reel__hud mono">
+          <span>cam_01 <b data-reel-name></b></span>
+          <span data-reel-index>01/05</span>
+        </figcaption>
+      </figure>
+
+      <svg class="gizmo" data-gizmo viewBox="-50 -50 100 100" aria-hidden="true">
+        <g data-gizmo-axes></g>
+      </svg>
+
+      <a class="hero__scroll mono" href="#projets" aria-label="Faire défiler vers les projets">
+        <span>Scroll</span><i></i>
+      </a>
+    </section>
+
+    <!-- ░░ MARQUEE ░░ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Modeling</span><span>✦</span><span>Sculpt</span><span>✦</span><span>Texturing</span><span>✦</span>
+        <span>Rigging</span><span>✦</span><span>Skinning</span><span>✦</span><span>Animation</span><span>✦</span>
+        <span>Lighting</span><span>✦</span><span>Rendu</span><span>✦</span><span>Maya</span><span>✦</span>
+        <span>Substance Painter</span><span>✦</span>
+      </div>
     </div>
 
-    <div class="hero-scroll">Scroll pour explorer</div>
-    <div class="hero-badge">
-        <svg viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
-            <defs><path id="circle" d="M 55,55 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"/></defs>
-            <text><textPath href="#circle">3D ARTIST • RENDUS • DESIGN • PORTFOLIO •</textPath></text>
-        </svg>
+    <!-- ░░ PROJETS COMPLETS ░░ -->
+    <section class="section featured" id="projets" data-key="Projets">
+      <header class="section__head">
+        <p class="section__index mono">01 — Projets complets</p>
+        <h2 class="section__title" data-reveal>De l'idée <em>au rendu.</em></h2>
+        <p class="section__intro" data-reveal>
+          Des projets menés de bout en bout : modélisation, matières, lumière et image finale.
+          Utilise le viewer pour passer en <b>wireframe</b><span class="kbd-hint"> (touches <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd>)</span>.
+        </p>
+      </header>
+      <div class="cases" data-mount="featured"></div>
+    </section>
+
+    <!-- ░░ PIPELINE ░░ -->
+    <section class="section pipeline" id="pipeline" data-key="Pipeline">
+      <header class="section__head">
+        <p class="section__index mono">02 — Pipeline</p>
+        <h2 class="section__title" data-reveal>Chaque étape <em>compte.</em></h2>
+        <p class="section__intro" data-reveal>
+          Exercices et études ciblées, classés par étape du pipeline de production 3D.
+        </p>
+      </header>
+      <div class="filters" role="toolbar" aria-label="Filtrer par discipline" data-mount="filters"></div>
+      <div class="grid" data-mount="pipeline" aria-live="polite"></div>
+    </section>
+
+    <!-- ░░ À PROPOS ░░ -->
+    <section class="section about" id="apropos" data-key="À propos">
+      <div class="about__text">
+        <p class="section__index mono">03 — À propos</p>
+        <h2 class="section__title" data-reveal>Un pied dans <em>chaque étape.</em></h2>
+        <p data-reveal>
+          Je suis Paul Besso, artiste 3D en formation. J'aime comprendre toute la chaîne
+          de fabrication d'une image : sculpter une silhouette, poser une topologie propre,
+          raconter une histoire avec l'usure d'un cuir, puis donner du poids à un personnage
+          une fois riggé.
+        </p>
+        <p data-reveal>
+          Environnements stylisés, props hard surface, personnages ou intégration dans des photos réelles :
+          je cherche à chaque fois l'image qui fait exister un univers.
+        </p>
+      </div>
+      <dl class="stats" data-mount="stats"></dl>
+    </section>
+
+    <!-- ░░ CONTACT ░░ -->
+    <section class="section contact" id="contact" data-key="Contact">
+      <p class="section__index mono">04 — Contact</p>
+      <h2 class="contact__title" data-reveal>
+        <span>Un projet&nbsp;?</span>
+        <span class="contact__title-accent">Faisons un rendu.</span>
+      </h2>
+      <div class="contact__actions" data-mount="contact"></div>
+    </section>
+  </main>
+
+  <footer class="footer mono">
+    <span>© <span data-year></span> Paul Besso</span>
+    <span>Fait main, image par image.</span>
+    <a href="#top">Haut de page ↑</a>
+  </footer>
+
+  <!-- ░░ TIME SLIDER ░░ -->
+  <div class="timeline" aria-label="Progression de la page">
+    <button class="timeline__play" data-play aria-label="Lecture automatique" aria-pressed="false">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-play" d="M4 2.5v11l9-5.5z"/><path class="i-pause" d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/></svg>
+    </button>
+    <p class="timeline__frame mono"><span data-frame>0001</span></p>
+    <div class="timeline__track" data-track>
+      <div class="timeline__ticks"></div>
+      <div class="timeline__keys" data-keys></div>
+      <div class="timeline__head" data-head></div>
     </div>
-</header>
+    <p class="timeline__end mono">0240</p>
+  </div>
 
-<!-- MARQUEE -->
-<div class="marquee-strip" aria-hidden="true">
-    <div class="marquee-inner">
-        <span>Blender</span><span class="dot">•</span>
-        <span>Cinema 4D</span><span class="dot">•</span>
-        <span>Substance Painter</span><span class="dot">•</span>
-        <span>Rendu 3D</span><span class="dot">•</span>
-        <span>Modélisation</span><span class="dot">•</span>
-        <span>Éclairage</span><span class="dot">•</span>
-        <span>Textures</span><span class="dot">•</span>
-        <span>Animation</span><span class="dot">•</span>
-        <span>Blender</span><span class="dot">•</span>
-        <span>Cinema 4D</span><span class="dot">•</span>
-        <span>Substance Painter</span><span class="dot">•</span>
-        <span>Rendu 3D</span><span class="dot">•</span>
-        <span>Modélisation</span><span class="dot">•</span>
-        <span>Éclairage</span><span class="dot">•</span>
-        <span>Textures</span><span class="dot">•</span>
-        <span>Animation</span><span class="dot">•</span>
+  <!-- ░░ LIGHTBOX ░░ -->
+  <dialog class="lightbox" aria-label="Visionneuse">
+    <div class="lightbox__top mono">
+      <p><span data-lb-title></span> <b data-lb-count></b></p>
+      <button class="lightbox__close" data-lb-close aria-label="Fermer">Fermer ✕</button>
     </div>
-</div>
+    <div class="lightbox__stage" data-lb-stage></div>
+    <p class="lightbox__caption mono" data-lb-caption></p>
+    <button class="lightbox__nav lightbox__nav--prev" data-lb-prev aria-label="Image précédente">←</button>
+    <button class="lightbox__nav lightbox__nav--next" data-lb-next aria-label="Image suivante">→</button>
+  </dialog>
 
-<main>
-
-    <!-- CHAMBRE -->
-    <section class="gallery" id="chambre">
-        <div class="section-label">
-            <span class="section-num">01</span>
-            <h2>Chambre</h2>
-        </div>
-        <div class="grid grid-single">
-            <div class="img-wrap">
-                <img src="chambre/BESSO_Paul_1B3D_Exercice2_Chambre.png" alt="Chambre 3D">
-                <div class="hover-label">Rendu 3D</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- BAKERY -->
-    <section class="gallery" id="bakery">
-        <div class="section-label">
-            <span class="section-num">02</span>
-            <h2>Bakery</h2>
-        </div>
-        <div class="grid">
-            <div class="img-wrap"><img src="bakery/bakery_image1.jpg" alt="Bakery 1"><div class="hover-label">Vue 01</div></div>
-            <div class="img-wrap"><img src="bakery/bakery_image2.jpg" alt="Bakery 2"><div class="hover-label">Vue 02</div></div>
-            <div class="img-wrap"><img src="bakery/bakery_image3.jpg" alt="Bakery 3"><div class="hover-label">Vue 03</div></div>
-        </div>
-    </section>
-
-    <!-- BACKPACK -->
-    <section class="gallery" id="backpack">
-        <div class="section-label">
-            <span class="section-num">03</span>
-            <h2>Backpack</h2>
-            <span class="section-role">Textures uniquement</span>
-        </div>
-        <div class="grid">
-            <div class="img-wrap"><img src="backpack/1000014662.png" alt="Backpack 1"><div class="hover-label">Vue 01</div></div>
-            <div class="img-wrap"><img src="backpack/1000014663.png" alt="Backpack 2"><div class="hover-label">Vue 02</div></div>
-            <div class="img-wrap"><img src="backpack/1000014664.png" alt="Backpack 3"><div class="hover-label">Vue 03</div></div>
-            <div class="img-wrap"><img src="backpack/1000014665.png" alt="Backpack 4"><div class="hover-label">Vue 04</div></div>
-        </div>
-    </section>
-
-    <!-- CAR -->
-    <section class="gallery" id="car">
-        <div class="section-label">
-            <span class="section-num">04</span>
-            <h2>Car</h2>
-        </div>
-        <div class="grid grid-single">
-            <div class="img-wrap">
-                <img src="car/car.png" alt="Car">
-                <div class="hover-label">Rendu Final</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- BATMAN -->
-    <section class="gallery" id="batman">
-        <div class="section-label">
-            <span class="section-num">05</span>
-            <h2>Batman</h2>
-        </div>
-        <div class="grid grid-single">
-            <div class="img-wrap">
-                <img src="batman/batman.jpg" alt="Batman">
-                <div class="hover-label">Rendu Final</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SPIDERBOT -->
-    <section class="gallery">
-        <div class="section-label">
-            <span class="section-num">06</span>
-            <h2>Spiderbot</h2>
-            <span class="section-role">Textures uniquement</span>
-        </div>
-        <div class="grid">
-            <div class="img-wrap"><img src="spiderbot/image_spiderbot1.jpg" alt="Spiderbot 1"><div class="hover-label">Vue 01</div></div>
-            <div class="img-wrap"><img src="spiderbot/image_spiderbot2.jpg" alt="Spiderbot 2"><div class="hover-label">Vue 02</div></div>
-            <div class="img-wrap"><img src="spiderbot/image_spiderbot3.jpg" alt="Spiderbot 3"><div class="hover-label">Vue 03</div></div>
-        </div>
-    </section>
-
-    <!-- ILLUSTRATIONS -->
-    <section class="gallery">
-        <div class="section-label">
-            <span class="section-num">07</span>
-            <h2>Illustrations</h2>
-        </div>
-        <div class="grid grid-single">
-            <div class="img-wrap"><img src="monstre.jpg" alt="Monstre"><div class="hover-label">Monstre</div></div>
-        </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- VIDEO -->
-    <section class="video-section" id="video">
-        <div class="section-label">
-            <span class="section-num">▶</span>
-            <h2>Vidéo</h2>
-        </div>
-        <div class="video-grid">
-            <div class="video-wrap">
-                <video controls>
-                    <source src="CW2025_1_1B3D_3B3D_Cauchemart.mp4" type="video/mp4">
-                    Ton navigateur ne supporte pas la vidéo.
-                </video>
-            </div>
-            <div class="video-wrap">
-                <video controls>
-                    <source src="room.mp4" type="video/mp4">
-                    Ton navigateur ne supporte pas la vidéo.
-                </video>
-            </div>
-        </div>
-    </section>
-
-</main>
-
-<footer>
-    <span>© 2026 — Paul BESSO</span>
-</footer>
-
-<script>
-    const cursor = document.getElementById('cursor');
-    const trail  = document.getElementById('cursorTrail');
-    document.addEventListener('mousemove', e => {
-        cursor.style.left = e.clientX - 5  + 'px';
-        cursor.style.top  = e.clientY - 5  + 'px';
-        trail.style.left  = e.clientX - 18 + 'px';
-        trail.style.top   = e.clientY - 18 + 'px';
-    });
-    document.querySelectorAll('a, img, video, .img-wrap, .btn').forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2.8)');
-        el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
-    });
-
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.08 });
-
-    document.querySelectorAll('.gallery, .video-section').forEach(el => observer.observe(el));
-</script>
+  <noscript>
+    <p class="noscript">Ce portfolio a besoin de JavaScript pour afficher les projets.</p>
+  </noscript>
 </body>
 </html>
