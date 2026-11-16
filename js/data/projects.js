@@ -180,7 +180,7 @@ export const projects = [
     description: 'Rig bipède complet avec skinning, testé en mouvement.',
     cover: null,
     media: [],
-    video: { src: `${ROOT}/biped-rig/rig.mov`, type: 'video/quicktime', label: 'Voir le rig' },
+    video: { src: `${ROOT}/biped-rig/rig.mp4`, type: 'video/mp4', label: 'Voir le rig' },
   },
 
   /* ───────────── ANIMATION ───────────── */
@@ -193,7 +193,7 @@ export const projects = [
     description: 'Séquence de combat animée : poids, impacts et timing.',
     cover: null,
     media: [],
-    video: { src: `${ROOT}/fight/fight.mov`, type: 'video/quicktime', label: "Voir l'animation" },
+    video: { src: `${ROOT}/fight/fight.mp4`, type: 'video/mp4', label: "Voir l'animation" },
   },
 ];
 
